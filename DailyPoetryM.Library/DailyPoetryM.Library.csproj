@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>DailyPoetryM</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="poetrydb.sqlite3" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <EmbeddedResource Include="poetrydb.sqlite3">
+		  <LogicalName>poetrydb.sqlite3</LogicalName>
+	  </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageReference Include="Moq" Version="4.18.4" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+  </ItemGroup>
+
+</Project>
