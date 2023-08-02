@@ -13,6 +13,7 @@ public class ServiceLocator
         ServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection.AddSingleton<IPoetryStorage, PoetryStorage>();
         serviceCollection.AddSingleton<ResultPageViewModel>();
+        serviceCollection.AddSingleton<IPreferenceStorage, PreferenceStorage>();
 
         serviceProvider = serviceCollection.BuildServiceProvider();
     }
