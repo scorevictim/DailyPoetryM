@@ -25,9 +25,20 @@ public class ResultPageViewModelTest : IDisposable
             Where = where
         };
 
+        var statusList = new List<string>();
+        resultPageViewModel.PropertyChanged += (sender, args) =>
+        {
+            if (args.PropertyName == nameof(ResultPageViewModel.Status))
+            {
+                statusList.Add(resultPageViewModel.Status);
+            }
+        };
+
         await resultPageViewModel.NavigatedToCommandFunctionAsync();
         Assert.Equal(ResultPageViewModel.PageSize, resultPageViewModel.Poetries.Count);
-
+        Assert.Equal(2, statusList.Count);
+        Assert.Equal(ResultPageViewModel.Loading, statusList[0]);
+        Assert.Equal(string.Empty, statusList[1]);
 
         await poetryStorage.CloseAsync();
     }

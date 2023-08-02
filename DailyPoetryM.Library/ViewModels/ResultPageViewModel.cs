@@ -40,6 +40,7 @@ public class ResultPageViewModel : ObservableObject
                 Status = Loading;
                 var poetries = (await poetryStorage.GetPoetriesAsync(Where,
                     Poetries.Count, PageSize)).ToList();
+                Status = string.Empty;
 
                 if (poetries.Count < PageSize)
                 {
