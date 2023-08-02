@@ -57,4 +57,10 @@
 	  <ProjectReference Include="..\DailyPoetryM.Library\DailyPoetryM.Library.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <MauiXaml Update="Pages\ResultPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>
