@@ -62,9 +62,13 @@ public class ResultPageViewModel : ObservableObject
     private RelayCommand navigatedToCommand;
     public RelayCommand NavigatedToCommand => navigatedToCommand ??= new(async () =>
     {
+        await NavigatedToCommandFunctionAsync();
+    });
+    public async Task NavigatedToCommandFunctionAsync()
+    {
         Poetries.Clear();
         await Poetries.LoadMoreAsync();
-    });
+    }
     private bool canLoadMore;
     public const string Loading = "Loading";
     public const string NoResult = "No Result";
