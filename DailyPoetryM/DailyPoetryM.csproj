@@ -51,6 +51,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="TheSalLab.MauiBehaviors" Version="1.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>

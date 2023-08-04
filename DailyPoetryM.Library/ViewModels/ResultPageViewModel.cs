@@ -32,6 +32,9 @@ public class ResultPageViewModel : ObservableObject
 
     public ResultPageViewModel(IPoetryStorage poetryStorage)
     {
+        Where = Expression.Lambda<Func<Poetry, bool>>(Expression.Constant(true),
+            Expression.Parameter(typeof(Poetry), "p"));
+        await poetryStorage.InitializeAsync();
         Poetries = new()
         {
             OnCanLoadMore = () => canLoadMore,
