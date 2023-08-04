@@ -1,4 +1,5 @@
 ﻿using DailyPoetryM.Models;
+using System.Linq.Expressions;
 using System.Text.Json;
 
 namespace DailyPoetryM.Services;
@@ -6,13 +7,20 @@ namespace DailyPoetryM.Services;
 public class TodayPoetryService : ITodayPoetryService
 {
     private readonly IAlertService alertService;
+    private readonly IPoetryStorage poetryStorage;
 
-    public TodayPoetryService(IAlertService alertService)
+    public TodayPoetryService(IAlertService alertService, IPoetryStorage poetryStorage)
     {
         this.alertService = alertService;
+        this.poetryStorage = poetryStorage;
     }
-    public Task<TodayPoetry> GetTodayPoetryAsync()
+    public async Task<TodayPoetry> GetTodayPoetryAsync()
     {
+        string token = await GetTokenAsync();
+        if(string.IsNullOrWhiteSpace(token))
+        {
+            return await GetRandomPoetryAsync();
+        }
         throw new NotImplementedException();
     }
 
@@ -33,6 +41,22 @@ public class TodayPoetryService : ITodayPoetryService
         var json = await response.Content.ReadAsStringAsync();
         var token = JsonSerializer.Deserialize<JinrishiciToken>(json);
         return token.data;
+    }
+    public async Task<TodayPoetry> GetRandomPoetryAsync()
+    {
+        var poetries = await poetryStorage.GetPoetriesAsync(
+            Expression.Lambda<Func<Poetry, bool>>(Expression.Constant(true),
+            Expression.Parameter(typeof(Poetry), "p")), new Random().Next(30), 1);
+        var poetry = poetries.First();
+        return new()
+        {
+            Snippet = poetry.Snippet,
+            Name = poetry.Name,
+            Dynasty = poetry.Dynasty,
+            Author = poetry.Author,
+            Content = poetry.Content,
+            Source = TodayPoetrySources.Local
+        };
     }
 }
 
