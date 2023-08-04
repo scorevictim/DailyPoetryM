@@ -34,7 +34,7 @@ public class ResultPageViewModel : ObservableObject
     {
         Where = Expression.Lambda<Func<Poetry, bool>>(Expression.Constant(true),
             Expression.Parameter(typeof(Poetry), "p"));
-        await poetryStorage.InitializeAsync();
+
         Poetries = new()
         {
             OnCanLoadMore = () => canLoadMore,
@@ -62,6 +62,7 @@ public class ResultPageViewModel : ObservableObject
                 return poetries;
             }
         };
+        this.poetryStorage = poetryStorage;
     }
     private RelayCommand navigatedToCommand;
     public RelayCommand NavigatedToCommand => navigatedToCommand ??= new(async () =>
@@ -70,6 +71,7 @@ public class ResultPageViewModel : ObservableObject
     });
     public async Task NavigatedToCommandFunctionAsync()
     {
+        await poetryStorage.InitializeAsync();
         Poetries.Clear();
         await Poetries.LoadMoreAsync();
     }
@@ -78,4 +80,5 @@ public class ResultPageViewModel : ObservableObject
     public const string NoResult = "No Result";
     public const string NoMoreResult = "End";
     public const int PageSize = 20;
+    private readonly IPoetryStorage poetryStorage;
 }
