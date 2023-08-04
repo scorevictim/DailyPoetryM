@@ -5,6 +5,12 @@ namespace DailyPoetryM.Services;
 
 public class TodayPoetryService : ITodayPoetryService
 {
+    private readonly IAlertService alertService;
+
+    public TodayPoetryService(IAlertService alertService)
+    {
+        this.alertService = alertService;
+    }
     public Task<TodayPoetry> GetTodayPoetryAsync()
     {
         throw new NotImplementedException();
@@ -18,8 +24,9 @@ public class TodayPoetryService : ITodayPoetryService
         {
             response = await httpClient.GetAsync("https://v2.jinrishici.com/token");
             response.EnsureSuccessStatusCode();
-        }catch (Exception )
+        }catch (Exception e)
         {
+            alertService.Alert("Error", e.Message, "OK");
             return string.Empty;
         }
 
