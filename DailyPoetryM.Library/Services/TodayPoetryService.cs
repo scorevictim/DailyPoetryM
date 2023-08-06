@@ -17,11 +17,48 @@ public class TodayPoetryService : ITodayPoetryService
     public async Task<TodayPoetry> GetTodayPoetryAsync()
     {
         string token = await GetTokenAsync();
-        if(string.IsNullOrWhiteSpace(token))
+        if (string.IsNullOrWhiteSpace(token))
         {
             return await GetRandomPoetryAsync();
         }
-        throw new NotImplementedException();
+
+        using var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Add("X-User-Token", token);
+        HttpResponseMessage response;
+        try
+        {
+            response = await httpClient.GetAsync("https://v2.jinrishici.com/sentence");
+            response.EnsureSuccessStatusCode();
+        }
+        catch (Exception e)
+        {
+            alertService.Alert("Error", e.Message, "OK");
+            return await GetRandomPoetryAsync();
+        }
+
+        var json = await response.Content.ReadAsStringAsync();
+        JinrishiciSentence jinrishiciSentence;
+        try
+        {
+            jinrishiciSentence = JsonSerializer.Deserialize<JinrishiciSentence>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? throw new JsonException();
+        }
+        catch (Exception e)
+        {
+            alertService.Alert("Error", e.Message, "OK");
+            return await GetRandomPoetryAsync();
+        }
+        return new()
+        {
+            Snippet = jinrishiciSentence.Data?.Content ?? throw new JsonException(),
+            Name = jinrishiciSentence.Data.Origin?.Title ?? throw new JsonException(),
+            Dynasty = jinrishiciSentence.Data.Origin.Dynasty ?? throw new JsonException(),
+            Author = jinrishiciSentence.Data.Origin.Author ?? throw new JsonException(),
+            Content = string.Join("\n", jinrishiciSentence.Data.Origin.Content ?? throw new JsonException()),
+            Source = TodayPoetrySources.Jinrishici
+        };
     }
 
     public async Task<string> GetTokenAsync()
@@ -32,7 +69,8 @@ public class TodayPoetryService : ITodayPoetryService
         {
             response = await httpClient.GetAsync("https://v2.jinrishici.com/token");
             response.EnsureSuccessStatusCode();
-        }catch (Exception e)
+        }
+        catch (Exception e)
         {
             alertService.Alert("Error", e.Message, "OK");
             return string.Empty;
@@ -64,4 +102,24 @@ public class JinrishiciToken
 {
     public string status { get; set; }
     public string data { get; set; }
+}
+
+public class JinrishiciOrigin
+{
+    public string? Title { get; set; } = string.Empty;
+    public string? Dynasty { get; set; } = string.Empty;
+    public string? Author { get; set; } = string.Empty;
+    public List<string> Content { get; set; } = new();
+    public List<string> Translate { get; set; } = new();
+}
+
+public class JinrishiciData
+{
+    public string? Content { get; set; } = string.Empty;
+    public JinrishiciOrigin? Origin { get; set; } = new();
+}
+
+public class JinrishiciSentence
+{
+    public JinrishiciData? Data { get; set; } = new();
 }
