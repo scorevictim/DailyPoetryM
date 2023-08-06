@@ -8,7 +8,7 @@ public class NegativeBoolConverter : IValueConverter
     {
         if (value is bool b)
         {
-            return b;
+            return !b;
         }
         return null;
     }
