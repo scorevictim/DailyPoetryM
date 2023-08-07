@@ -15,6 +15,9 @@
 	  <EmbeddedResource Include="poetrydb.sqlite3">
 		  <LogicalName>poetrydb.sqlite3</LogicalName>
 	  </EmbeddedResource>
+	  <EmbeddedResource Include="todayImage.bin">
+		  <LogicalName>todayImage.bin</LogicalName>
+	  </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
