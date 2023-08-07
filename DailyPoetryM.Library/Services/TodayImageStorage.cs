@@ -58,9 +58,7 @@ public class TodayImageStorage : ITodayImageStorage
             await using var imageAssetFileStream =
                 new FileStream(TodayImagePath, FileMode.Create) ??
                 throw new NullReferenceException("Null file stream.");
-            await using var imageAssetStream =
-                typeof(TodayImageStorage).Assembly.GetManifestResourceStream(
-                    FileName) ??
+            await using var imageAssetStream = typeof(TodayImageStorage).Assembly.GetManifestResourceStream(FileName) ??
                 throw new NullReferenceException(
                     "Null manifest resource stream");
             await imageAssetStream.CopyToAsync(imageAssetFileStream);
@@ -72,8 +70,7 @@ public class TodayImageStorage : ITodayImageStorage
         }
 
         var imageMemoryStream = new MemoryStream();
-        await using var imageFileStream =
-            new FileStream(TodayImagePath, FileMode.Open);
+        await using var imageFileStream = new FileStream(TodayImagePath, FileMode.Open);
         await imageFileStream.CopyToAsync(imageMemoryStream);
         todayImage.ImageBytes = imageMemoryStream.ToArray();
 
