@@ -8,7 +8,8 @@ public class ServiceLocator
     private IServiceProvider serviceProvider;
     public ResultPageViewModel ResultPageViewModel => serviceProvider.GetService<ResultPageViewModel>();
     public TodayPageViewModel TodayPageViewModel => serviceProvider.GetService<TodayPageViewModel>();
-    public IRouteService RouteService => serviceProvider.GetRequiredService<IRouteService>();
+    public DetailPageViewModelProxy DetailPageViewModelProxy => serviceProvider.GetService<DetailPageViewModelProxy>();
+    public IRouteService RouteService => serviceProvider.GetService<IRouteService>();
 
     public ServiceLocator()
     {
@@ -18,6 +19,7 @@ public class ServiceLocator
 
         serviceCollection.AddSingleton<ResultPageViewModel>();
         serviceCollection.AddSingleton<TodayPageViewModel>();
+        serviceCollection.AddSingleton<DetailPageViewModelProxy>();
 
         serviceCollection.AddSingleton<ITodayPoetryService, TodayPoetryService>();
         serviceCollection.AddSingleton<IAlertService, AlertService>();
