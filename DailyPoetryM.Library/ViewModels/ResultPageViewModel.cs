@@ -30,7 +30,7 @@ public class ResultPageViewModel : ObservableObject
     }
     public MauiInfiniteScrollCollection<Poetry> Poetries { get; }
 
-    public ResultPageViewModel(IPoetryStorage poetryStorage)
+    public ResultPageViewModel(IPoetryStorage poetryStorage, IContentNavigationService contentNavigationService)
     {
         Where = Expression.Lambda<Func<Poetry, bool>>(Expression.Constant(true),
             Expression.Parameter(typeof(Poetry), "p"));
@@ -63,6 +63,7 @@ public class ResultPageViewModel : ObservableObject
             }
         };
         this.poetryStorage = poetryStorage;
+        this.contentNavigationService = contentNavigationService;
     }
     private RelayCommand navigatedToCommand;
     public RelayCommand NavigatedToCommand => navigatedToCommand ??= new(async () =>
@@ -81,4 +82,15 @@ public class ResultPageViewModel : ObservableObject
     public const string NoMoreResult = "End";
     public const int PageSize = 20;
     private readonly IPoetryStorage poetryStorage;
+    private readonly IContentNavigationService contentNavigationService;
+    private RelayCommand testCommand;
+    public RelayCommand TestCommand => testCommand ??= new(async () =>
+    {
+        await contentNavigationService.NavigateToAsync(ContentNavigationConstant.DetailPage, Poetries[0]);
+    });
+    private RelayCommand<Poetry> poetryTappedCommand;
+    public RelayCommand<Poetry> PoetryTappedCommand => poetryTappedCommand ??= new(async (poetry) =>
+    {
+        await contentNavigationService.NavigateToAsync(ContentNavigationConstant.DetailPage, poetry);
+    });
 }

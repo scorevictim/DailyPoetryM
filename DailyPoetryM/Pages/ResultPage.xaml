@@ -10,6 +10,7 @@
 
     <ContentPage.Resources>
         <lc:PoetryToStringConverter x:Key="PoetryToString"></lc:PoetryToStringConverter>
+        <lc:ItemTappedEventArgsToPoetryConverter x:Key="ItemToPoetry"></lc:ItemTappedEventArgsToPoetryConverter>
     </ContentPage.Resources>
 
     <ContentPage.Behaviors>
@@ -25,6 +26,14 @@
     <ListView ItemsSource="{Binding Poetries}">
         <ListView.Behaviors>
             <scroll:MauiInfiniteScrollBehavior/>
+            <b:MauiEventHandlerBehavior EventName="ItemTapped">
+                <b:MauiActionCollection>
+                    <b:MauiInvokeCommandAction
+                        Command="{Binding PoetryTappedCommand}"
+                        Converter="{StaticResource ItemToPoetry}">
+                    </b:MauiInvokeCommandAction>
+                </b:MauiActionCollection>
+            </b:MauiEventHandlerBehavior>
         </ListView.Behaviors>
         <ListView.ItemTemplate>
             <DataTemplate>
@@ -38,5 +47,11 @@
                 </ViewCell>
             </DataTemplate>
         </ListView.ItemTemplate>
+
+        <ListView.Footer>
+            <StackLayout>
+                <Button Command="{Binding TestCommand}" Text="Go"></Button>
+            </StackLayout>
+        </ListView.Footer>
     </ListView>
 </ContentPage>
