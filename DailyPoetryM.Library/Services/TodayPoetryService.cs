@@ -8,11 +8,13 @@ public class TodayPoetryService : ITodayPoetryService
 {
     private readonly IAlertService alertService;
     private readonly IPoetryStorage poetryStorage;
+    private readonly IPreferenceStorage preferenceStorage;
 
-    public TodayPoetryService(IAlertService alertService, IPoetryStorage poetryStorage)
+    public TodayPoetryService(IAlertService alertService, IPoetryStorage poetryStorage, IPreferenceStorage preferenceStorage)
     {
         this.alertService = alertService;
         this.poetryStorage = poetryStorage;
+        this.preferenceStorage = preferenceStorage;
     }
     public async Task<TodayPoetry> GetTodayPoetryAsync()
     {
@@ -60,9 +62,14 @@ public class TodayPoetryService : ITodayPoetryService
             Source = TodayPoetrySources.Jinrishici
         };
     }
-
+    private const string TokenKey = nameof(TodayPoetryService) + ".Token";
     public async Task<string> GetTokenAsync()
     {
+        var localToken = preferenceStorage.Get(TokenKey, string.Empty);
+        if(string.IsNullOrWhiteSpace(localToken) is false)
+        {
+            return localToken;
+        }
         using var httpClient = new HttpClient();
         HttpResponseMessage response;
         try
@@ -78,6 +85,7 @@ public class TodayPoetryService : ITodayPoetryService
 
         var json = await response.Content.ReadAsStringAsync();
         var token = JsonSerializer.Deserialize<JinrishiciToken>(json);
+        preferenceStorage.Set(TokenKey, token.data);
         return token.data;
     }
     public async Task<TodayPoetry> GetRandomPoetryAsync()
