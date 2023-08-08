@@ -37,5 +37,17 @@ public partial class AppShell : Shell
             }
         });
         Routing.RegisterRoute(routeService.GetRoute(ContentNavigationConstant.DetailPage), typeof(DetailPage));
+        Items.Add(new FlyoutItem
+        {
+            Title = nameof(QueryPage),
+            Route = routeService.GetRoute(RootNavigationConstant.QueryPage),
+            Items =
+            {
+                new ShellContent
+                {
+                    ContentTemplate = new(typeof(QueryPage))
+                }
+            }
+        });
     }
 }

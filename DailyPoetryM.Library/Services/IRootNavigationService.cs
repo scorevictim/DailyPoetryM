@@ -9,4 +9,5 @@ public interface IRootNavigationService
 public static class RootNavigationConstant
 {
     public const string TodayPage = nameof(TodayPage);
+    public const string QueryPage = nameof(QueryPage);
 }
