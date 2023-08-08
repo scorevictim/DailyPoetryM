@@ -26,6 +26,8 @@ public class ServiceLocator
         serviceCollection.AddSingleton<IRouteService, RouteService>();
         serviceCollection.AddSingleton<IContentNavigationService, ContentNavigationService>();
         serviceCollection.AddSingleton<IRootNavigationService, RootNavigationService>();
+        serviceCollection.AddSingleton<ITodayImageService, BingImageService>();
+        serviceCollection.AddSingleton<ITodayImageStorage, TodayImageStorage>();
 
         serviceProvider = serviceCollection.BuildServiceProvider();
     }
