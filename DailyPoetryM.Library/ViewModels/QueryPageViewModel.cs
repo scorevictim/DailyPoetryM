@@ -49,8 +49,14 @@ public class FilterViewModel : ObservableObject
     private Lazy<RelayCommand> lazyRemoveCommand;
     private readonly QueryPageViewModel queryPageViewModel;
 
-    public void AddCommandFunction() { }
-    public void RemoveCommandFunction() { }
+    public void AddCommandFunction()
+    {
+        queryPageViewModel.AddFilterViewModel(this);
+    }
+    public void RemoveCommandFunction()
+    {
+        queryPageViewModel.RemoveFilterViewModel(this);
+    }
     public RelayCommand AddCommand => lazyAddCommand.Value;
     public RelayCommand RemoveCommand => lazyRemoveCommand.Value;
 }
