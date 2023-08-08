@@ -13,18 +13,31 @@ public class QueryPageViewModel : ObservableObject
 
     public QueryPageViewModel()
     {
-        FilterViewModelCollection.Add(new FilterViewModel());
-        FilterViewModelCollection.Add(new FilterViewModel());
-        FilterViewModelCollection.Add(new FilterViewModel());
+        FilterViewModelCollection.Add(new FilterViewModel(this));
+        FilterViewModelCollection.Add(new FilterViewModel(this));
+        FilterViewModelCollection.Add(new FilterViewModel(this));
+    }
+    public virtual void AddFilterViewModel(FilterViewModel filterViewModel)
+    {
+        FilterViewModelCollection.Insert(FilterViewModelCollection.IndexOf(filterViewModel) + 1, new(this));
+    }
+    public virtual void RemoveFilterViewModel(FilterViewModel filterViewModel)
+    {
+        FilterViewModelCollection.Remove(filterViewModel);
+        if (FilterViewModelCollection.Count == 0)
+        {
+            FilterViewModelCollection.Add(new(this));
+        }
     }
 }
 
 public class FilterViewModel : ObservableObject
 {
-    public FilterViewModel()
+    public FilterViewModel(QueryPageViewModel queryPageViewModel)
     {
         lazyAddCommand = new(new RelayCommand(AddCommandFunction));
         lazyRemoveCommand = new(new RelayCommand(RemoveCommandFunction));
+        this.queryPageViewModel = queryPageViewModel;
     }
     public string Content
     {
@@ -34,6 +47,8 @@ public class FilterViewModel : ObservableObject
     private string content;
     private Lazy<RelayCommand> lazyAddCommand;
     private Lazy<RelayCommand> lazyRemoveCommand;
+    private readonly QueryPageViewModel queryPageViewModel;
+
     public void AddCommandFunction() { }
     public void RemoveCommandFunction() { }
     public RelayCommand AddCommand => lazyAddCommand.Value;
