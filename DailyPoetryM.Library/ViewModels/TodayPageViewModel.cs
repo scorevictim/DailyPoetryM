@@ -9,21 +9,40 @@ public class TodayPageViewModel : ObservableObject
 {
     private readonly ITodayPoetryService todayPoetryService;
     private readonly IContentNavigationService contentNavigationService;
+    private readonly ITodayImageService todayImageService;
 
-    public TodayPageViewModel(ITodayPoetryService todayPoetryService, IContentNavigationService contentNavigationService)
+    public TodayPageViewModel(ITodayPoetryService todayPoetryService, 
+                              IContentNavigationService contentNavigationService,
+                              ITodayImageService todayImageService)
     {
         this.todayPoetryService = todayPoetryService;
         this.contentNavigationService = contentNavigationService;
-        this.lazyLoadedCommand = new Lazy<AsyncRelayCommand>(() => new AsyncRelayCommand(LoadedCommandFunction));
+        this.todayImageService = todayImageService;
+        this.lazyLoadedCommand = new Lazy<RelayCommand>(() => new RelayCommand(LoadedCommandFunction));
         this.lazyShowDetailCommand = new Lazy<AsyncRelayCommand>(() => new AsyncRelayCommand(ShowDetailCommandFunction));
     }
-    private readonly Lazy<AsyncRelayCommand> lazyLoadedCommand;
-    public AsyncRelayCommand LoadedCommand => lazyLoadedCommand.Value;
-    public async Task LoadedCommandFunction()
+    private readonly Lazy<RelayCommand> lazyLoadedCommand;
+    public RelayCommand LoadedCommand => lazyLoadedCommand.Value;
+    public void LoadedCommandFunction()
     {
-        IsLoading = true;
-        TodayPoetry = await todayPoetryService.GetTodayPoetryAsync();
-        IsLoading = false;
+        Task.Run(async () =>
+        {
+
+            IsLoading = true;
+            TodayPoetry = await todayPoetryService.GetTodayPoetryAsync();
+            IsLoading = false;
+        });
+        Task.Run(async () =>
+        {
+
+            TodayImage = await todayImageService.GetTodayImageAsync();
+            var checkUpdateResult = await todayImageService.CheckUpdateAsync();
+            if (checkUpdateResult.HasUpdate)
+            {
+                TodayImage = checkUpdateResult.TodayImage;
+            }
+        });
+
     }
 
     private bool isLoading;
@@ -38,6 +57,12 @@ public class TodayPageViewModel : ObservableObject
     {
         get => todayPoetry;
         set => SetProperty(ref todayPoetry, value);
+    }
+    private TodayImage todayImage;
+    public TodayImage TodayImage
+    {
+        get => todayImage;
+        set => SetProperty(ref todayImage, value);
     }
 
     public AsyncRelayCommand ShowDetailCommand => lazyShowDetailCommand.Value;
