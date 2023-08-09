@@ -72,7 +72,10 @@ public class ResultPageViewModel : ObservableObject
     });
     public async Task NavigatedToCommandFunctionAsync()
     {
-        await poetryStorage.InitializeAsync();
+        if(poetryStorage.IsInitialized is false)
+        {
+            await poetryStorage.InitializeAsync();
+        }
         Poetries.Clear();
         await Poetries.LoadMoreAsync();
     }
