@@ -50,6 +50,7 @@ public class FavoritePageViewModel : ObservableObject
 
     public async Task LoadedCommandFunction()
     {
+        await favoriteStorage.InitializeAsync();
         IsLoading = true;
 
         PoetryFavoriteCollection.Clear();
