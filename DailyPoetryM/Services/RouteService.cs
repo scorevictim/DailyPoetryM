@@ -6,6 +6,7 @@ public class RouteService : IRouteService
     {
         [RootNavigationConstant.TodayPage] = RootNavigationConstant.TodayPage,
         [RootNavigationConstant.QueryPage] = RootNavigationConstant.QueryPage,
+        [RootNavigationConstant.FavoritePage] = RootNavigationConstant.FavoritePage,
         [ContentNavigationConstant.TodayDetailPage] = $"{RootNavigationConstant.TodayPage}/{ContentNavigationConstant.TodayDetailPage}",
         [ContentNavigationConstant.ResultPage] = ContentNavigationConstant.ResultPage,
         [ContentNavigationConstant.DetailPage] = $"{ContentNavigationConstant.ResultPage}/{ContentNavigationConstant.DetailPage}",

@@ -49,5 +49,17 @@ public partial class AppShell : Shell
                 }
             }
         });
+        Items.Add(new FlyoutItem
+        {
+            Title = nameof(FavoritePage),
+            Route = routeService.GetRoute(RootNavigationConstant.FavoritePage),
+            Items =
+            {
+                new ShellContent
+                {
+                    ContentTemplate = new(typeof(FavoritePage))
+                }
+            }
+        });
     }
 }
