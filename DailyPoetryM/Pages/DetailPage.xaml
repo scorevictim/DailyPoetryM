@@ -2,14 +2,55 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DailyPoetryM.Pages.DetailPage"
+             xmlns:b="clr-namespace:TheSalLab.MauiBehaviors;assembly=TheSalLab.MauiBehaviors"
+             xmlns:lc="clr-namespace:DailyPoetryM.Converters"
              BindingContext="{Binding DetailPageViewModelProxy, Source={StaticResource ServiceLocator}}"
              Title="DetailPage">
+    <ContentPage.Behaviors>
+        <b:MauiEventHandlerBehavior EventName="NavigatedTo">
+            <b:MauiActionCollection>
+                <b:MauiInvokeCommandAction
+                    Command="{Binding NavigatedToCommand}">
+                </b:MauiInvokeCommandAction>
+            </b:MauiActionCollection>
+        </b:MauiEventHandlerBehavior>
+    </ContentPage.Behaviors>
+
     <ScrollView>
         <StackLayout Padding="8">
             <Label FontSize="18"
                    Margin="0,0,0,8"
                    HorizontalTextAlignment="Center"
-                Text="{Binding Poetry.Name}"/>
+                   Text="{Binding Poetry.Name}" />
+            <StackLayout Orientation="Horizontal"
+                         HorizontalOptions="Center"
+                         Margin="0,0,0,8">
+                <Label FontSize="12"
+                       Text="{Binding Poetry.Dynasty}" />
+                <Label FontSize="12"
+                       Text="·" />
+                <Label FontSize="12"
+                       Text="{Binding Poetry.Author}" />
+            </StackLayout>
+            <Label FontSize="18"
+                   Margin="0,0,0,8"
+                   Text="{Binding Poetry.Content}" />
+            
+            <StackLayout Margin="0,0,0,8"
+                         HorizontalOptions="Center"
+                         Orientation="Horizontal">
+                <Switch IsToggled="{Binding Favorite.IsFavorite}">
+                    <Switch.Behaviors>
+                        <b:MauiEventHandlerBehavior EventName="Toggled">
+                            <b:MauiActionCollection>
+                                <b:MauiInvokeCommandAction
+                                    Command="{Binding FavoriteToggledCommand}" />
+                            </b:MauiActionCollection>
+                        </b:MauiEventHandlerBehavior>
+                    </Switch.Behaviors>
+                </Switch>
+                
+            </StackLayout>
         </StackLayout>
     </ScrollView>
 </ContentPage>
