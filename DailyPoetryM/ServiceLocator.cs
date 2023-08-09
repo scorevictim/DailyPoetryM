@@ -11,6 +11,7 @@ public class ServiceLocator
     public DetailPageViewModelProxy DetailPageViewModelProxy => serviceProvider.GetService<DetailPageViewModelProxy>();
     public QueryPageViewModel QueryPageViewModel => serviceProvider.GetService<QueryPageViewModel>();
     public FavoritePageViewModel FavoritePageViewModel => serviceProvider.GetService<FavoritePageViewModel>();
+    public InitializationPageViewModel InitializationPageViewModel => serviceProvider.GetService<InitializationPageViewModel>();
     public IRouteService RouteService => serviceProvider.GetService<IRouteService>();
 
     public ServiceLocator()
@@ -24,6 +25,7 @@ public class ServiceLocator
         serviceCollection.AddSingleton<DetailPageViewModelProxy>();
         serviceCollection.AddSingleton<QueryPageViewModel>();
         serviceCollection.AddSingleton<FavoritePageViewModel>();
+        serviceCollection.AddSingleton<InitializationPageViewModel>();
 
         serviceCollection.AddSingleton<ITodayPoetryService, TodayPoetryService>();
         serviceCollection.AddSingleton<IAlertService, AlertService>();
