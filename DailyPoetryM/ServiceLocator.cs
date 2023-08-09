@@ -1,5 +1,6 @@
 ﻿using DailyPoetryM.Services;
 using DailyPoetryM.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DailyPoetryM;
 
@@ -13,6 +14,9 @@ public class ServiceLocator
     public FavoritePageViewModel FavoritePageViewModel => serviceProvider.GetService<FavoritePageViewModel>();
     public InitializationPageViewModel InitializationPageViewModel => serviceProvider.GetService<InitializationPageViewModel>();
     public IRouteService RouteService => serviceProvider.GetService<IRouteService>();
+    public IPoetryStorage PoetryStorage => serviceProvider.GetService<IPoetryStorage>();
+    public IFavoriteStorage FavoriteStorage => serviceProvider.GetService<IFavoriteStorage>();
+    public IInitializationNavigationService InitializationNavigationService => serviceProvider.GetService<IInitializationNavigationService>();
 
     public ServiceLocator()
     {
@@ -35,6 +39,7 @@ public class ServiceLocator
         serviceCollection.AddSingleton<ITodayImageService, BingImageService>();
         serviceCollection.AddSingleton<ITodayImageStorage, TodayImageStorage>();
         serviceCollection.AddSingleton<IFavoriteStorage, FavoriteStorage>();
+        serviceCollection.AddSingleton<IInitializationNavigationService, InitializationNavigationService>();
 
         serviceProvider = serviceCollection.BuildServiceProvider();
     }
